@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<meta name="author" content="Ethan Gray">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Last Gasp Furniture Invoice</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div id="topDisplay"> </div>
+    <hr>
+    <div id="botDisplay"> </div>
+    
+    <input type="button" value="Shop Again" onclick="start()">
+    
+    <script src="script.js"> </script>
+    
+    <script>
+        let urlParams = new URLSearchParams(window.location.search);
+        const invoiceShoppingList = JSON.parse(urlParams.get("shoppingList"));
+        const invoiceShoppingListQuant = JSON.parse(urlParams.get("shoppingListQuant"));
+        const invoiceStorePrices = JSON.parse(urlParams.get("storePrices"));
+
+        let topTable = `
+        <table>
+            <thead>
+                <tr>
+                    <th>Item  </th>
+                    <th>Quantity  </th>
+                    <th>Unit Price  </th>
+                    <th>Price </th>
+                </tr>
+            </thead>
+            <tbody>`;
+
+        for (let i = 0; i < invoiceShoppingList.length; i++) {
+            let itemPrice = 0;
+            if (invoiceShoppingList[i] === "chair") {
+                itemPrice = invoiceStorePrices[0];
+            } else if (invoiceShoppingList[i] === "recliner") {
+                itemPrice = invoiceStorePrices[1];
+            } else if (invoiceShoppingList[i] === "table") {
+                itemPrice = invoiceStorePrices[2];
+            } else if (invoiceShoppingList[i] === "umbrella") {
+                itemPrice = invoiceStorePrices[3];
+            }
+            topTable += `
+                <tr>
+                    <td>${capitalizeFirstLetter(invoiceShoppingList[i])}</td>
+                    <td>${invoiceShoppingListQuant[i]}</td>
+                    <td>$${itemPrice.toFixed(2)}</td>
+                    <td>$${(itemPrice * invoiceShoppingListQuant[i]).toFixed(2)}</td>
+                </tr>
+                `;
+        }
+        topTable += `</tbody>
+        </table>`;
+        const invoiceSubtotal = parseFloat(urlParams.get("subtotal")).toFixed(2);
+        const invoiceTax = parseFloat(urlParams.get("tax"));
+        const invoiceShippingCharge = parseFloat(urlParams.get("shippingCharge")).toFixed(2);
+        const invoiceTotal = parseFloat(urlParams.get("total")).toFixed(2);
+        const invoiceStateShipped = urlParams.get("stateShipped");
+        const invoiceItemTotal = parseFloat(urlParams.get("itemTotal")).toFixed(2);
+        let bottomDisplay = `
+      <table>
+          <tbody>
+              <tr>
+                  <th>Item Total: </th>
+                  <td>${invoiceItemTotal}</td>
+              </tr>
+              <tr>
+                  <th>Shipping to  ${invoiceStateShipped}: </th>
+                  <td>$${invoiceShippingCharge}</td>
+              </tr>
+              <tr>
+                  <th>Subtotal: </th>
+                  <td>$${invoiceSubtotal}</td>
+              </tr>
+              <tr>
+                  <th>Tax: </th>
+                  <td>$${invoiceTax.toFixed(2)}</td>
+              </tr>
+              <tr>
+                  <th>Invoice Total: </th>
+                  <td>$${invoiceTotal}</td>
+              </tr>
+          </tbody>`;
+        document.getElementById('topDisplay').innerHTML = topTable;
+        document.getElementById('botDisplay').innerHTML = bottomDisplay;
+    </script>
+</body>
+</html>

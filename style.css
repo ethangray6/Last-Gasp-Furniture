@@ -1,0 +1,27 @@
+html {
+  height: 100%;
+  width: 100%;
+}
+h1 {
+  text-align: center;
+}
+button {
+  display: flex;
+  margin: auto;
+}
+input {
+  margin-left: 110px;
+}
+th {
+  text-align: left;
+}
+td {
+  text-align: center;
+}
+table {
+  width : 300px;
+}
+hr {
+  margin-left: 0px;
+  width : 300px;
+}
